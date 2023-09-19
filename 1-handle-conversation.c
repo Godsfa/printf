@@ -1,5 +1,5 @@
-#include <stdio.h>
 #include <stdarg.h>
+#include <unistd.h>
 #include "main.h"
 
 /**
@@ -46,6 +46,12 @@ str++;
 printed_chars++;
 }
 }
+else if (*format == 'd' || *format == 'i')
+{
+int num = va_arg(args, int);
+
+printed_chars += printf("%d", num);
+}
 else if (*format == '%')
 {
 putchar('%');
@@ -56,5 +62,5 @@ format++;
 }
 
 va_end(args);
-return printed_chars;
+return( printed_chars);
 }
