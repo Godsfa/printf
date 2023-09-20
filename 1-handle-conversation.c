@@ -1,89 +1,63 @@
+#include <unistd.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include "main.h"
 
 /**
- * _printf - Custom printf function
- * @format: Format string
- * @...: Variable number of arguments
+ * print_number_recursive - Recursively prints a number.
+ * @n: The number to print.
  *
- * Return: Number of characters printed
+ * Return: The number of characters printed.
  */
-int _printf(const char *format, ...)
+int print_number_recursive(unsigned int n);
+
+/**
+ * print_number - Prints a number.
+ * @args: The list of arguments.
+ *
+ * Return: The number of characters printed.
+ */
+int print_number(va_list args)
 {
-    va_list args;
-    int printed_chars = 0;
+    int n = va_arg(args, int);
+    unsigned int num;
+    int count = 0;
 
-    va_start(args, format);
+    char c;
 
-    while (*format)
+    if (n < 0)
     {
-        if (*format != '%')
-        {
-            putchar(*format);
-            printed_chars++;
-        }
-        else
-        {
-            format++;
-            if (*format == '\0')
-                break;
-
-            if (*format == 'c')
-            {
-                char c = va_arg(args, int);
-                putchar(c);
-                printed_chars++;
-            }
-            else if (*format == 's')
-            {
-                char *str = va_arg(args, char *);
-                if (str == NULL)
-                    str = "(null)";
-                while (*str)
-                {
-                    putchar(*str);
-                    str++;
-                    printed_chars++;
-                }
-            }
-            else if (*format == '%')
-            {
-                putchar('%');
-                printed_chars++;
-            }
-            else if (*format == 'd' || *format == 'i')
-            {
-                int num = va_arg(args, int);
-                int num_chars = 0;
-
-                
-                if (num < 0)
-                {
-                    putchar('-');
-                    printed_chars++;
-                    num = -num;
-                }
-
-               
-                while (num > 0)
-                {
-                    int digit = num % 10;
-                    putchar('0' + digit);
-                    printed_chars++;
-                    num /= 10;
-                }
-
-                if (num_chars == 0)
-                {
-                    putchar('0');
-                    printed_chars++;
-                }
-            }
-        }
-        format++;
+        count += write(1, "-", 1);
+        num = -n;
     }
+    else
+        num = n;
 
-    va_end(args);
-    return printed_chars;
+    if (num / 10)
+        count += print_number_recursive(num / 10);
+
+    c = (char)(num % 10 + '0');
+    count += write(1, &c, 1);
+
+    return (count);
+}
+
+/**
+ * print_number_recursive - Recursively prints a number.
+ * @n: The number to print.
+ *
+ * Return: The number of characters printed.
+ */
+int print_number_recursive(unsigned int n)
+{
+    int count = 0;
+
+    char c;
+
+    if (n / 10)
+        count += print_number_recursive(n / 10);
+
+    c = (char)(n % 10 + '0');
+    count += write(1, &c, 1);
+
+    return (count);
 }

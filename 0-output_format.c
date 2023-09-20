@@ -1,60 +1,35 @@
-#include <stdarg.h>
 #include <unistd.h>
+#include <stdarg.h>
+#include "main.h"
 
 /**
- * _printf - Custom printf function
- * @format: Format string
- * @...: Variable number of arguments
+ * print_char - Prints a character.
+ * @args: The list of arguments.
  *
- * Return: Number of characters printed (excluding the null byte)
+ * Return: The number of characters printed.
  */
-int _printf(const char *format, ...)
+int print_char(va_list args)
 {
-    va_list args;
-    int printed_chars = 0;
+    char c = va_arg(args, int);
+    return (write(1, &c, 1));
+}
 
-    va_start(args, format);
+/**
+ * print_string - Prints a string.
+ * @args: The list of arguments.
+ *
+ * Return: The number of characters printed.
+ */
+int print_string(va_list args)
+{
+    char *str = va_arg(args, char *);
+    int i;
 
-    while (*format)
-    {
-        if (*format != '%')
-        {
-            write(1, format, 1);
-            printed_chars++;
-        }
-        else
-        {
-            format++;
-            if (*format == '\0')
-                break;
+    if (!str)
+        str = "(null)";
 
-            if (*format == 'c')
-            {
-                char c = va_arg(args, int);
-                write(1, &c, 1);
-                printed_chars++;
-            }
-            else if (*format == 's')
-            {
-                char *str = va_arg(args, char *);
-                if (str == NULL)
-                    str = "(null)";
-                while (*str)
-                {
-                    write(1, str, 1);
-                    str++;
-                    printed_chars++;
-                }
-            }
-            else if (*format == '%')
-            {
-                write(1, "%", 1);
-                printed_chars++;
-            }
-        }
-        format++;
-    }
+    for (i = 0; str[i]; i++)
+        ;
 
-    va_end(args);
-    return printed_chars;
+    return (write(1, str, i));
 }
