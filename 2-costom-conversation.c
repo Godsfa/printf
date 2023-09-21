@@ -1,7 +1,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include "test/holberton.h"
+#include "holberton.h"
 
 /**
  * custom_printf - Custom printf function.
@@ -48,10 +48,4 @@ int custom_printf(const char *format, ...)
 
     va_end(args);
     return (count);
-}
-
-
-int main() {
-    printf("Hello, world!\n");
-    return 0;
 }
